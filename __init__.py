@@ -22,13 +22,14 @@ class Migrator():
 	def com_connection(self):
 		try:
 			database = self.output['COMMIT']
-			try:
-				if database['USER'] != '' and database['USER'] != None:
-					uri = "mongodb://{USER}:{PASSWORD}@{HOST}:27017".format(USER=database['USER'], PASSWORD=database['PASSWORD'], HOST=database['HOST'])
-				else:
-					uri = "mongodb://localhost:27017"
-			except:
-				uri = "mongodb://localhost:27017"
+
+			if not database['HOST']:
+				database['HOST'] = "localhost:27017"
+			if not database['USER']:
+				uri = "mongodb://{USER}:{PASSWORD}@{HOST}".format(USER=database['USER'], PASSWORD=database['PASSWORD'], HOST=database['HOST'])
+			else:
+				uri = "mongodb://{HOST}".format(HOST=database['HOST'])
+		
 			client = MongoClient(uri)
 			cur = client[database['DATABASE']]
 			return cur, None
@@ -145,6 +146,9 @@ class Migrator():
 				each_set[x] = str(each_set[x])
 			self.skeleton_reload()
 			for table_name in self.table_order:
+				print(str(table_name))
+				print(self.table_order)
+				print(self.tables)
 				each_table = self.tables[table_name]
 				condition = each_table['condition']
 				if condition != None:
