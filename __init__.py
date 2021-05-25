@@ -25,7 +25,7 @@ class Migrator():
 
 			if not database['HOST']:
 				database['HOST'] = "localhost:27017"
-			if not database['USER']:
+			if database['USER']:
 				uri = "mongodb://{USER}:{PASSWORD}@{HOST}".format(USER=database['USER'], PASSWORD=database['PASSWORD'], HOST=database['HOST'])
 			else:
 				uri = "mongodb://{HOST}".format(HOST=database['HOST'])
